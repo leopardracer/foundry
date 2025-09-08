@@ -329,6 +329,24 @@ contract ParseTomlTest is DSTest {
 
         assertEq(keccak256(abi.encode(members)), keccak256(abi.encode(data.members)));
     }
+
+    function test_floatNaN() public {
+        bytes memory data = vm.parseToml(toml, ".nanFloat");
+        string memory decodedData = abi.decode(data, (string));
+        assertEq("NaN", decodedData);
+    }
+
+    function test_floatInf() public {
+        bytes memory data = vm.parseToml(toml, ".infFloat");
+        string memory decodedData = abi.decode(data, (string));
+        assertEq("inf", decodedData);
+    }
+
+    function test_floatNegInf() public {
+        bytes memory data = vm.parseToml(toml, ".neginfFloat");
+        string memory decodedData = abi.decode(data, (string));
+        assertEq("-inf", decodedData);
+    }
 }
 
 contract WriteTomlTest is DSTest {
@@ -446,3 +464,4 @@ contract WriteTomlTest is DSTest {
         vm.writeToml("{\"a\": 123, \"b\": \"0x000000000000000000000000000000000000bEEF\"}", path);
     }
 }
+
